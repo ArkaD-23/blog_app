@@ -45,14 +45,16 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json()
+
       if (!response.ok) {
         throw new Error("Failed to sign up. Please try again.");
       }
 
       router.push("/signin");
-      console.log("Signup successful");
+      console.log(data.message);
     } catch (error) {
-      setError(error.message);
+      console.log(error.message);
     }
   }
 

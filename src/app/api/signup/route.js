@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
-import { userSchema } from "@/lib/validators/userSchema"; // Ensure correct schema is imported
-import { users } from "@/lib/db/schema"; // Ensure correct schema is used
+import bcryptjs from "bcryptjs"
+import { userSchema } from "@/lib/validators/userSchema"; 
+import { users } from "@/lib/db/schema"; 
 
 export async function POST(req) {
   let data;
@@ -30,8 +31,19 @@ export async function POST(req) {
     return NextResponse.json({ status: 400, message: error.message });
   }
 
+  const hashedPassword = bcryptjs.hashSync(validatedData.password, 10);
+
+  const userData = {
+    fname: validatedData.fname,
+    lname: validatedData.lname,
+    username: validatedData.username,
+    email: validatedData.email,
+    password: hashedPassword, 
+    role: validatedData.role,
+  };
+
   try {
-    await db.insert(users).values({ ...validatedData });
+    await db.insert(users).values(userData);
     return NextResponse.json({
       status: 200,
       message: "User successfully stored in the database",

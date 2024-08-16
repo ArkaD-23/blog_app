@@ -1,9 +1,57 @@
 {
-  "id": "075aca2c-91e5-4242-9325-51320be08240",
-  "prevId": "1270d392-07ae-467c-a117-c104329dd0d4",
+  "id": "30bccb79-e950-4e61-be44-a576507d114b",
+  "prevId": "ab4f5d4f-8954-41a5-89d6-0392b414bc6d",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.blogs": {
+      "name": "blogs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "blogtitle": {
+          "name": "blogtitle",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authorname": {
+          "name": "authorname",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "blogcontent": {
+          "name": "blogcontent",
+          "type": "varchar(600)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -38,12 +86,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "password": {
+          "name": "password",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "role": {
           "name": "role",
           "type": "varchar(12)",
           "primaryKey": false,
           "notNull": true,
-          "default": "'creator'"
+          "default": "'user'"
         },
         "blog_ids": {
           "name": "blog_ids",

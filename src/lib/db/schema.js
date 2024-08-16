@@ -7,6 +7,7 @@ export const users = pgTable("users", {
     lname: varchar("lname", {length:100}).notNull(),
     username: varchar("username", {length:100}).unique().notNull(),
     email: varchar("email", {length:100}).unique().notNull(),
+    password: varchar("password", {length:100}).notNull(),
     role: varchar("role", {length:12}).notNull().default("user"),
     blogIds: jsonb("blog_ids").default(sql`'[]'::jsonb`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
