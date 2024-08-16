@@ -1,4 +1,6 @@
 "use client"
+import { signInFailure, signInStart, signInSuccess } from "@/store/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, {useState} from "react";
@@ -7,6 +9,9 @@ const Signin = () => {
 
   const [formData, setFormData] = useState({});
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const {currentUser , loading} = useAppSelector((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -18,7 +23,8 @@ const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    dispatch(signInStart());
+    setIsLoading(true);
     try {
       const response = await fetch("http://localhost:3000/api/signin", {
         method: "POST",
@@ -32,13 +38,16 @@ const Signin = () => {
 
       if (!response.ok) {
         console.log("Failed to sign in. Please try again.");
+        dispatch(signInFailure(data));
         return;
       }
 
+      dispatch(signInSuccess(data));
       router.push("/");
       console.log(data.message);
     } catch (error) {
       console.log(error.message);
+      dispatch(signInFailure(error));
       return;
     }
   }

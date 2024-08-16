@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import { userSchema } from "@/lib/validators/userSchema"; 
 import { users } from "@/lib/db/schema"; 
 
-export async function POST(req) {
+export async function PUT(req) {
   let data;
 
   try {
@@ -17,12 +17,15 @@ export async function POST(req) {
     });
   }
 
-  const { email, password } = data;
+  const { id, fname, lname, username, email, password, role } = data;
 
   try {
-    userSchema.pick({ email: true, password: true }).parse({
+    userSchema.partial().parse({
+      fname,
+      lname,
+      username,
       email,
-      password
+      password,
     });
   } catch (error) {
     return NextResponse.json({ status: 400, message: error.message });
@@ -32,33 +35,44 @@ export async function POST(req) {
     const user = await db
       .select()
       .from(users)
-      .where(eq(users.email, email))
-      .limit(1)
+      .where(eq(users.id, id))
+      .limit(1);
 
     if (user.length === 0) {
       return NextResponse.json({
-        status: 401,
+        status: 404,
         message: "User not found",
       });
     }
 
-    const userData = user[0];
+    const existingUser = user[0];
 
-    const isPasswordValid = bcryptjs.compareSync(password, userData.password);
+    const updatedData = {
+      fname: fname || existingUser.fname,
+      lname: lname || existingUser.lname,
+      username: username || existingUser.username,
+      email: email || existingUser.email,
+    };
 
-    if (!isPasswordValid) {
-      return NextResponse.json({
-        status: 401,
-        message: "Invalid password",
-      });
+    if (password) {
+      updatedData.password = bcryptjs.hashSync(password, 10);
     }
 
-    return NextResponse.json(userData);
+    await db
+      .update(users)
+      .set(updatedData)
+      .where(eq(users.id, id))
+      .execute();
+
+    return NextResponse.json({
+      status: 200,
+      message: "User successfully updated",
+    });
   } catch (error) {
     console.error("Database query error:", error);
     return NextResponse.json({
       status: 500,
-      message: "Failed to sign in",
+      message: "Failed to update user",
     });
   }
 }
