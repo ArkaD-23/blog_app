@@ -1,30 +1,71 @@
+"use client"
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, {useState} from "react";
 
 const Signin = () => {
+
+  const [formData, setFormData] = useState({});
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3000/api/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.log("Failed to sign in. Please try again.");
+        return;
+      }
+
+      router.push("/");
+      console.log(data.message);
+    } catch (error) {
+      console.log(error.message);
+      return;
+    }
+  }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-black px-4 sm:px-6 lg:px-8">
           <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-lg">
             <h2 className="text-3xl font-bold text-center text-white">Sign In</h2>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <input
                   id="email"
-                  name="email"
                   type="email"
                   required
                   className="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="email"
+                  onChange={handleChange}
                 />
               </div>
               <div>
                 <input
                   id="password"
-                  name="password"
                   type="password"
                   required
                   className="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="password"
+                  onChange={handleChange}
                 />
               </div>
               <div>
