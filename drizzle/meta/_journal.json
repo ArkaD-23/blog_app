@@ -8,6 +8,20 @@
       "when": 1723744845103,
       "tag": "0000_little_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1723793248680,
+      "tag": "0001_graceful_xorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1723793319735,
+      "tag": "0002_rich_marten_broadcloak",
+      "breakpoints": true
     }
   ]
 }

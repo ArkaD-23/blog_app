@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "blog_ids" jsonb DEFAULT '[]'::jsonb;
