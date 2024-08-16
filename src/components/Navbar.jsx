@@ -13,35 +13,32 @@ export const Navbar = () => {
     <nav className="bg-black shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/">
-              <h1 className="text-2xl font-bold text-white-800">BlogApp</h1>
-            </Link>
-          </div>
-          <ul>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link href="/">
-                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                    Home
-                  </li>
-                </Link>
-                <Link href="/about">
-                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                    About
-                  </li>
-                </Link>
-                <Link href="/blogs">
-                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                    Blogs
-                  </li>
-                </Link>
-                <Link href="/profile">
-                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                    Profile
-                  </li>
-                </Link>
-              </div>
+          <ul className="flex-1 flex justify-start">
+            <div className="flex items-center space-x-4">
+              <Link href="/profile">
+              <li className="px-6">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                  <span className="text-black font-bold">P</span>
+                </div>
+              </li>
+              </Link>
+            </div>
+            <div className="hidden md:flex space-x-4">
+              <Link href="/">
+                <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
+                  Home
+                </li>
+              </Link>
+              <Link href="/about">
+                <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
+                  About
+                </li>
+              </Link>
+              <Link href="/blogs">
+                <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
+                  Blogs
+                </li>
+              </Link>
             </div>
           </ul>
           <div className="-mr-2 flex md:hidden">
@@ -110,11 +107,6 @@ export const Navbar = () => {
             <Link href="/blogs">
               <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">
                 Blogs
-              </li>
-            </Link>
-            <Link href="/profile">
-              <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">
-                Profile
               </li>
             </Link>
           </div>
