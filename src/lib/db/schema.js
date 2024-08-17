@@ -9,7 +9,6 @@ export const users = pgTable("users", {
     email: varchar("email", {length:100}).unique().notNull(),
     password: varchar("password", {length:100}).notNull(),
     role: varchar("role", {length:12}).notNull().default("user"),
-    blogIds: jsonb("blog_ids").default(sql`'[]'::jsonb`),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
 });
@@ -18,8 +17,9 @@ export const blogs = pgTable("blogs", {
     id: serial("id").primaryKey(),
     title: varchar("title", {length:100}).notNull(),
     author: varchar("author", {length:100}).notNull(),
-    content: varchar("content", {length:600}).notNull(),
+    content: varchar("content", {length:2000}).notNull(),
     status: varchar("status", {length:12}).default("pending"),
+    userId: varchar("userId", {length:50}),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
 });

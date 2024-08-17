@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
 import { blogsSchema } from "@/lib/validators/blogsSchema"; 
-import { blogs } from "@/lib/db/schema"; 
+import { blogs} from "@/lib/db/schema"; 
 
 export async function POST(req) {
   let data;
@@ -14,7 +14,7 @@ export async function POST(req) {
       message: "Invalid JSON data",
     });
   }
-  console.log(data.title);
+  console.log(data);
 
   let validatedData;
 
@@ -24,6 +24,7 @@ export async function POST(req) {
       author: data.author,
       content: data.content,
       status: data.status,
+      userId: data.userId,
     });
   } catch (error) {
     return NextResponse.json({ status: 400, message: error.message });
@@ -34,8 +35,9 @@ export async function POST(req) {
     author: validatedData.author,
     content: validatedData.content,
     status: validatedData.status,
+    userId: validatedData.userId,
   };
-
+  
   try {
     await db.insert(blogs).values(blogData);
     return NextResponse.json({
@@ -45,7 +47,8 @@ export async function POST(req) {
   } catch (error) {
     return NextResponse.json({
       status: 500,
-      message: error.message,
+      message: error,
     });
   }
+
 }

@@ -1,6 +1,6 @@
 {
-  "id": "b7eee0ff-fa19-419e-9554-b9ebdfeeb489",
-  "prevId": "6833c3d1-2b4f-4ba0-a437-8f476a64c269",
+  "id": "35f73b93-149a-4041-a3f1-ea8ff48cb771",
+  "prevId": "14633840-9ed3-4246-8487-3a9656a78bf9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -28,9 +28,22 @@
         },
         "content": {
           "name": "content",
-          "type": "varchar(600)",
+          "type": "varchar(2000)",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -98,13 +111,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
-        },
-        "blog_ids": {
-          "name": "blog_ids",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
         },
         "updated_at": {
           "name": "updated_at",

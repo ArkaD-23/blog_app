@@ -1,6 +1,6 @@
 {
-  "id": "6833c3d1-2b4f-4ba0-a437-8f476a64c269",
-  "prevId": "695364aa-f635-4c14-bbea-c6e653cdf888",
+  "id": "14633840-9ed3-4246-8487-3a9656a78bf9",
+  "prevId": "455e5d18-278e-4a88-8541-ba0b97ce6ead",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -14,23 +14,36 @@
           "primaryKey": true,
           "notNull": true
         },
-        "blogtitle": {
-          "name": "blogtitle",
+        "title": {
+          "name": "title",
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": true
         },
-        "authorname": {
-          "name": "authorname",
+        "author": {
+          "name": "author",
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": true
         },
-        "blogcontent": {
-          "name": "blogcontent",
-          "type": "varchar(600)",
+        "content": {
+          "name": "content",
+          "type": "varchar(2000)",
           "primaryKey": false,
           "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pending'"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
@@ -104,7 +117,7 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false,
-          "default": "'[]'::jsonb"
+          "default": "'{}'::jsonb"
         },
         "updated_at": {
           "name": "updated_at",

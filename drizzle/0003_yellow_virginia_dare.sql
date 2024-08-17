@@ -1,1 +1,0 @@
-ALTER TABLE "blogs" ADD COLUMN "status" varchar(12) DEFAULT 'pending';

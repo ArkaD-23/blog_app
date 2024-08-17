@@ -1,9 +1,11 @@
 "use client"
+import { useAppSelector } from "@/store/hooks/hooks";
 import React, { useState } from "react";
 
 const CreateBlog = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
+  const {currentUser} = useAppSelector((state) => state.user);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -22,7 +24,7 @@ const CreateBlog = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({...formData, status:"pending"}),
+        body: JSON.stringify({...formData, status:"pending", userId: currentUser.id.toString()}),
       });
 
       const data = await response.json()

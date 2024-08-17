@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
-const AdminPage = () => {
+const Blogstatus = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -48,6 +48,24 @@ const AdminPage = () => {
         setBlogs(
           blogs.map((blog) => (blog.id === id ? { ...blog, status } : blog))
         );
+        try {
+            setLoading(true);
+            const res = await fetch("http://localhost:3000/api/viewpendingblogs");
+            const data = await res.json();
+    
+            console.log("Fetched data:", data);
+            if (Array.isArray(data.data)) {
+              setBlogs(data.data);
+              setLoading(false);
+            } else {
+              console.error("Expected an array in data.data but got:", data);
+              setBlogs([]);
+              setLoading(false);
+            }
+          } catch (error) {
+            console.error("Error fetching blogs:", error);
+            setLoading(false);
+          }
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -91,4 +109,4 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+export default Blogstatus;
