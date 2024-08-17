@@ -37,16 +37,27 @@ export const Navbar = () => {
                   Home
                 </li>
               </Link>
-              <Link href="/about">
+              {currentUser && (
+                <Link href={`/myblogs/${currentUser.id}`}>
+                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
+                    Blogs
+                  </li>
+                </Link>
+              )}
+              {currentUser && (
+                <Link href="/createblog">
+                  <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
+                    Create
+                  </li>
+                </Link>
+              )}
+              {currentUser && currentUser.role === "admin" && (
+                <Link href="/admin/blogstatus">
                 <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                  About
+                  Permissions
                 </li>
               </Link>
-              <Link href="/blogs">
-                <li className="text-white-800 hover:text-white-600 px-3 py-2 rounded-md text-sm font-medium">
-                  Blogs
-                </li>
-              </Link>
+              )}
             </div>
           </ul>
           <div className="-mr-2 flex md:hidden">

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
-import { blogsSchema } from "@/lib/validators/blogsSchema"; 
-import { blogs} from "@/lib/db/schema"; 
+import { blogsSchema } from "@/lib/validators/blogsSchema";
+import { blogs } from "@/lib/db/schema";
 
 export async function POST(req) {
   let data;
@@ -37,7 +37,7 @@ export async function POST(req) {
     status: validatedData.status,
     userId: validatedData.userId,
   };
-  
+
   try {
     await db.insert(blogs).values(blogData);
     return NextResponse.json({
@@ -50,5 +50,4 @@ export async function POST(req) {
       message: error,
     });
   }
-
 }
