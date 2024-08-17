@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Signup = () => {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
   const [formData, setFormData] = useState({
     fname: "",
@@ -35,6 +36,13 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isAdmin && formData.secretKey !== process.env.SECRET_KEY) {
+      setError("Wrong secret key. Please try again.");
+      return;
+    }
+
+    setError(""); 
+
     try {
       const response = await fetch("http://localhost:3000/api/signup", {
         method: "POST",
@@ -44,7 +52,7 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error("Failed to sign up. Please try again.");
@@ -55,7 +63,7 @@ const Signup = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black px-4 sm:px-6 lg:px-8">
@@ -137,7 +145,13 @@ const Signup = () => {
                 required
                 className="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Secret Key"
+                onChange={handleChange}
               />
+            </div>
+          )}
+          {error && (
+            <div className="text-red-500 text-sm">
+              {error}
             </div>
           )}
           <div>

@@ -22,6 +22,13 @@
       "when": 1723873694766,
       "tag": "0002_rich_unicorn",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1723881740927,
+      "tag": "0003_tricky_toro",
+      "breakpoints": true
     }
   ]
 }

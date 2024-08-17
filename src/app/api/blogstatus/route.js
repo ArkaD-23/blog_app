@@ -1,31 +1,24 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db/db'; 
-import { blogs , users } from '@/lib/db/schema';
+import { blogs } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function POST(req) {
   try {
-    const { id, status, userId } = await req.json();
+    const { id, status, remarks } = await req.json();
 
     if (!id || !status) {
       return NextResponse.json({ status: 400, message: "Missing id or status" });
     }
 
     const updatedBlog = await db.update(blogs)
-      .set({ status })
+      .set({ status , remarks })
       .where(eq(blogs.id, id))
       .returning();
 
     if (updatedBlog.length === 0) {
       return NextResponse.json({ status: 404, message: "Blog not found" });
     }
-
-    const user = await db.select().from(users).where(eq(users.id, userId));
-    const updatedBlogsMap = { ...user.blog_ids, [blogId]: status };
-    await db
-    .update(users)
-    .set({ blog_ids: updatedBlogsMap })
-    .where(eq(users.id, userId));
 
     return NextResponse.json({
       status: 200,

@@ -37,6 +37,7 @@ const UserBlogsPage = () => {
               <h2 className="text-xl text-black font-semibold mb-2">{blog.title}</h2>
               <p className="text-gray-700 mb-4">{blog.content}</p>
               <p className="text-sm text-gray-500 mb-4">Status: {blog.status}</p>
+              <p className="text-sm text-gray-500 mb-4">Remarks from admin: {blog.remarks}</p>
               <p className="text-sm text-gray-500 mb-4">Created At: {new Date(blog.createdAt).toLocaleDateString()}</p>
             </div>
           ))

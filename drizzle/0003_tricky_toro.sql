@@ -1,0 +1,1 @@
+ALTER TABLE "blogs" ADD COLUMN "remarks" varchar(1000);

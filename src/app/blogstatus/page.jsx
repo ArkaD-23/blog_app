@@ -31,14 +31,14 @@ const Blogstatus = () => {
     fetchBlogs();
   }, []);
 
-  const updateBlogStatus = async (id, status) => {
+  const updateBlogStatus = async (id, status, remarks) => {
     try {
       const res = await fetch("http://localhost:3000/api/blogstatus", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: id, status: status }),
+        body: JSON.stringify({ id, status, remarks }),
       });
       const data = await res.json();
 
@@ -49,23 +49,23 @@ const Blogstatus = () => {
           blogs.map((blog) => (blog.id === id ? { ...blog, status } : blog))
         );
         try {
-            setLoading(true);
-            const res = await fetch("http://localhost:3000/api/viewpendingblogs");
-            const data = await res.json();
-    
-            console.log("Fetched data:", data);
-            if (Array.isArray(data.data)) {
-              setBlogs(data.data);
-              setLoading(false);
-            } else {
-              console.error("Expected an array in data.data but got:", data);
-              setBlogs([]);
-              setLoading(false);
-            }
-          } catch (error) {
-            console.error("Error fetching blogs:", error);
+          setLoading(true);
+          const res = await fetch("http://localhost:3000/api/viewpendingblogs");
+          const data = await res.json();
+
+          console.log("Fetched data:", data);
+          if (Array.isArray(data.data)) {
+            setBlogs(data.data);
+            setLoading(false);
+          } else {
+            console.error("Expected an array in data.data but got:", data);
+            setBlogs([]);
             setLoading(false);
           }
+        } catch (error) {
+          console.error("Error fetching blogs:", error);
+          setLoading(false);
+        }
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -85,16 +85,32 @@ const Blogstatus = () => {
                 </h2>
               </Link>
               <p className="text-gray-700 mb-4">{blog.content}</p>
+              <textarea
+                className="w-full p-2 mb-4 text-black rounded-md"
+                placeholder="Enter remarks for the author..."
+                value={blog.remarks || ""}
+                onChange={(e) =>
+                  setBlogs(
+                    blogs.map((b) =>
+                      b.id === blog.id ? { ...b, remarks: e.target.value } : b
+                    )
+                  )
+                }
+              />
               <div className="flex justify-between">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
-                  onClick={() => updateBlogStatus(blog.id, "accepted")}
+                  onClick={() =>
+                    updateBlogStatus(blog.id, "accepted", blog.remarks)
+                  }
                 >
                   Accept
                 </button>
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
-                  onClick={() => updateBlogStatus(blog.id, "rejected")}
+                  onClick={() =>
+                    updateBlogStatus(blog.id, "rejected", blog.remarks)
+                  }
                 >
                   Reject
                 </button>
