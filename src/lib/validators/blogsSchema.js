@@ -6,5 +6,4 @@ export const blogsSchema = z.object({
   content: z.string().max(2000, { message: "Blog content must be 600 characters or less" }),
   status: z.enum(["accepted", "rejected", "pending"], { message: "Role should be either 'accepted' , 'rejected' or 'pending'" }),
   userId: z.string().max(50, {message: "Id must be 50 characters or less"}),
-  remarks: z.string().max((1000), {message: "Id must be 50 characters or less"}),
 });

@@ -5,8 +5,9 @@ import { eq } from "drizzle-orm";
 import { userSchema } from "@/lib/validators/userSchema"; 
 import { users } from "@/lib/db/schema"; 
 
-export async function PUT(req) {
+export async function PUT(req , {params}) {
   let data;
+  const {id} = params;
 
   try {
     data = await req.json();
@@ -17,7 +18,7 @@ export async function PUT(req) {
     });
   }
 
-  const { id, fname, lname, username, email, password, role } = data;
+  const { fname, lname, username, email, password } = data;
 
   try {
     userSchema.partial().parse({
@@ -48,6 +49,7 @@ export async function PUT(req) {
     const existingUser = user[0];
 
     const updatedData = {
+      id: id,
       fname: fname || existingUser.fname,
       lname: lname || existingUser.lname,
       username: username || existingUser.username,
@@ -67,6 +69,7 @@ export async function PUT(req) {
     return NextResponse.json({
       status: 200,
       message: "User successfully updated",
+      data: updatedData
     });
   } catch (error) {
     console.error("Database query error:", error);
