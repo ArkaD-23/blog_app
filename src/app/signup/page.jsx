@@ -15,7 +15,6 @@ const Signup = () => {
     role: "user",
     secretKey: "",
   });
-  const [error, setError] = useState(null);
 
   const handleToggleChange = (e) => {
     setIsAdmin(e.target.checked);

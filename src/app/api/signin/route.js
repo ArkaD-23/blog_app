@@ -4,6 +4,7 @@ import { db } from "@/lib/db/db";
 import { eq } from "drizzle-orm";
 import { userSchema } from "@/lib/validators/userSchema"; 
 import { users } from "@/lib/db/schema"; 
+import jwt from "jsonwebtoken";
 
 export async function POST(req) {
   let data;
@@ -44,6 +45,9 @@ export async function POST(req) {
 
     const userData = user[0];
 
+    const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET);
+    const expiryDate = new Date(Date.now() + 36000000);
+
     const isPasswordValid = bcryptjs.compareSync(password, userData.password);
 
     if (!isPasswordValid) {
@@ -53,7 +57,12 @@ export async function POST(req) {
       });
     }
 
-    return NextResponse.json(userData);
+    const response = NextResponse.json(userData);
+    response.headers.set(
+      'Set-Cookie',
+      `access_token=${token}; HttpOnly; Path=/; Expires=${expiryDate.toUTCString()};`
+    );
+    return response;
   } catch (error) {
     console.error("Database query error:", error);
     return NextResponse.json({

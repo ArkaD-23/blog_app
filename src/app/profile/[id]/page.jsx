@@ -1,6 +1,38 @@
+"use client"
 import React from "react";
+import Link from "next/link"
 
 const Profile = () => {
+
+  const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`http://localhost:3000/api/delete/${currentUser._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error));
+    }
+  };
+
+  const handleSignout = async () => {
+    try {
+      await fetch(`http://localhost:3000/api/signout/${currentUser._id}`);
+      dispatch(signOut());
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-black px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-lg shadow-lg">
@@ -65,6 +97,37 @@ const Profile = () => {
             </button>
           </div>
         </form>
+        <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "1.25rem",
+              }}
+            >
+              <Link
+                href="/"
+                style={{
+                  color: "#DC2626",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+                onClick={handleDeleteAccount}
+              >
+                Delete Account
+              </Link>
+
+              <Link
+                href="/signin"
+                onClick={handleSignout}
+                style={{
+                  color: "#DC2626",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                Sign Out
+              </Link>
+            </div>
       </div>
     </div>
   );
