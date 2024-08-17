@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAppSelector } from "@/store/hooks/hooks";
+import { current } from "@reduxjs/toolkit";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,16 +119,20 @@ export const Navbar = () => {
                 Home
               </li>
             </Link>
-            <Link href="/about">
-              <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">
-                About
+            {currentUser && (<Link href={`/myblogs/${currentUser.id}`}>
+              <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">Blogs              
               </li>
-            </Link>
-            <Link href="/blogs">
+            </Link>)}
+            {currentUser && (<Link href="/createblog">
               <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">
-                Blogs
+                Create
               </li>
-            </Link>
+            </Link>)}
+            {currentUser && currentUser.role === "admin" && (<Link href="/admin/blogstatus">
+              <li className="text-white-800 hover:text-white-600 block px-3 py-2 rounded-md text-base font-medium">
+                Permissions
+              </li>
+            </Link>)}
           </div>
         </ul>
       </div>
