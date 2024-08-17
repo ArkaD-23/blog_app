@@ -10,7 +10,7 @@ const Home = () => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://localhost:3000/api/acceptedblogs");
+        const res = await fetch("https://blog-app-six-blond.vercel.app/api/acceptedblogs");
         const data = await res.json();
         console.log(data);
 

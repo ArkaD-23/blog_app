@@ -28,7 +28,7 @@ const Profile = () => {
     setLoading(true);
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`http://localhost:3000/api/updateuser/${currentUser.id}`, {
+      const res = await fetch(`https://blog-app-six-blond.vercel.app/api/updateuser/${currentUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`http://localhost:3000/api/deleteuser/${currentUser.id}`, {
+      const res = await fetch(`https://blog-app-six-blond.vercel.app/api/deleteuser/${currentUser.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const Profile = () => {
 
   const handleSignout = async () => {
     try {
-      await fetch(`http://localhost:3000/api/signout/${currentUser._id}`);
+      await fetch(`https://blog-app-six-blond.vercel.app/api/signout/${currentUser._id}`);
       dispatch(signOut());
     } catch (error) {
       alert(error.message);
