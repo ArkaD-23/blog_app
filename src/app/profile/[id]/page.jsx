@@ -75,7 +75,7 @@ const Profile = () => {
 
   const handleSignout = async () => {
     try {
-      await fetch(`https://blog-app-six-blond.vercel.app/api/signout/${currentUser._id}`);
+      await fetch(`https://blog-app-six-blond.vercel.app/api/signout/${currentUser.id}`);
       dispatch(signOut());
     } catch (error) {
       alert(error.message);
