@@ -1,4 +1,3 @@
-// app/api/user/[id]/route.js
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db/db";
 import { users } from "@/lib/db/schema";
@@ -6,8 +5,7 @@ import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
 export async function DELETE(req, { params }) {
-  const cookies = req.cookies; 
-  const token = cookies.get('access_token')?.value;
+  const token = req.cookies.get("access_token");
   const {id} = params;
 
   if (!token) {
@@ -22,20 +20,15 @@ export async function DELETE(req, { params }) {
       return NextResponse.json({ status: 401, message: "You can delete only your own account!" });
     }
 
-    const result = await db
+    await db
       .delete(users)
       .where(eq(users.id, id));
 
-    if (result.rowCount === 0) {
-      return NextResponse.json({ status: 404, message: "User not found!" });
-    }
-
     const response = NextResponse.json({ status: 200, message: "User has been deleted!" });
-    response.cookies.set('access_token', '', { httpOnly: true, path: '/', expires: new Date(0) }); 
+    response.headers.set('Set-Cookie', `access_token=; HttpOnly; Path=/;`);
     return response;
 
   } catch (error) {
-    console.error("Error deleting user:", error);
-    return NextResponse.json({ status: 500, message: error.message || "Something went wrong!" });
+    return NextResponse.json({ status: 500, message: error.message });
   }
 }

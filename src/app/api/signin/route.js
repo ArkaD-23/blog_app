@@ -46,6 +46,7 @@ export async function POST(req) {
     const userData = user[0];
 
     const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET);
+    const stringToken = token.toString();
     const expiryDate = new Date(Date.now() + 36000000);
 
     const isPasswordValid = bcryptjs.compareSync(password, userData.password);
@@ -60,7 +61,7 @@ export async function POST(req) {
     const response = NextResponse.json(userData);
     response.headers.set(
       'Set-Cookie',
-      `access_token=${token}; HttpOnly; Path=/; Expires=${expiryDate.toUTCString()};`
+      `access_token=${stringToken}; HttpOnly; Path=/; Expires=${expiryDate.toUTCString()};`
     );
     return response;
   } catch (error) {
