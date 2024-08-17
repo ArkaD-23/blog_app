@@ -19,6 +19,7 @@ export const blogs = pgTable("blogs", {
     title: varchar("title", {length:100}).notNull(),
     author: varchar("author", {length:100}).notNull(),
     content: varchar("content", {length:600}).notNull(),
+    status: varchar("status", {length:12}).default("pending"),
     updatedAt: timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
 });

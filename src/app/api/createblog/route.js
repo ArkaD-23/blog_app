@@ -23,6 +23,7 @@ export async function POST(req) {
       title: data.title,
       author: data.author,
       content: data.content,
+      status: data.status,
     });
   } catch (error) {
     return NextResponse.json({ status: 400, message: error.message });
@@ -32,6 +33,7 @@ export async function POST(req) {
     title: validatedData.title,
     author: validatedData.author,
     content: validatedData.content,
+    status: validatedData.status,
   };
 
   try {
