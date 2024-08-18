@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -35,6 +36,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (isAdmin && formData.secretKey !== process.env.SECRET_KEY) {
       setError("Wrong secret key. Please try again.");
@@ -44,7 +46,7 @@ const Signup = () => {
     setError(""); 
 
     try {
-      const response = await fetch("https://blog-app-six-blond.vercel.app/api/signup", {
+      const response = await fetch("http://localhost:3000/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,14 +56,18 @@ const Signup = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error("Failed to sign up. Please try again.");
+      if (data.status !== 200) {
+        setError(data.message);
+        setLoading(false);
+        return;
       }
-
+      setError("");
+      setLoading(false);
       router.push("/signin");
-      console.log(data.message);
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
+      setLoading(false);
+      return;
     }
   };
 
@@ -149,17 +155,12 @@ const Signup = () => {
               />
             </div>
           )}
-          {error && (
-            <div className="text-red-500 text-sm">
-              {error}
-            </div>
-          )}
           <div>
             <button
               type="submit"
               className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              Sign Up
+              {loading ? "Please Wait..." : "Signup"}
             </button>
           </div>
         </form>
@@ -172,6 +173,7 @@ const Signup = () => {
             Sign In
           </Link>
         </p>
+        {error ? <p>{error}</p> : ""}
       </div>
     </div>
   );

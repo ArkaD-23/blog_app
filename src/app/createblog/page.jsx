@@ -6,6 +6,7 @@ const CreateBlog = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({});
   const {currentUser} = useAppSelector((state) => state.user);
+  const [message, setMessage] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -19,7 +20,7 @@ const CreateBlog = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch("https://blog-app-six-blond.vercel.app/api/createblog", {
+      const response = await fetch("http://localhost:3000/api/createblog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,16 +30,17 @@ const CreateBlog = () => {
 
       const data = await response.json()
 
-      if (!response.ok) {
-        console.log("Failed to sign up. Please try again.");
+      if (data.status !== 200) {
+        setMessage("Failed to publish blog !");
         setLoading(false);
         return;
       }
       setLoading(false);
-      console.log(data.message);
+      setMessage(data.message);
     } catch (error) {
       console.log(error.message);
       setLoading(false);
+      setMessage(error.message);
     }
   }
 
@@ -95,6 +97,7 @@ const CreateBlog = () => {
             </button>
           </div>
         </form>
+        {message ? <p>{message}</p> : ""}
       </div>
     </div>
   );

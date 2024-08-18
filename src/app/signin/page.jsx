@@ -10,7 +10,7 @@ const Signin = () => {
   const [formData, setFormData] = useState({});
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const {currentUser , loading} = useAppSelector((state) => state.user);
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -26,7 +26,7 @@ const Signin = () => {
     dispatch(signInStart());
     setIsLoading(true);
     try {
-      const response = await fetch("https://blog-app-six-blond.vercel.app/api/signin", {
+      const response = await fetch("http://localhost:3000/api/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,20 +34,23 @@ const Signin = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json()
+      const data = await response.json();
+      console.log(data.status);
 
-      if (!response.ok) {
-        console.log("Failed to sign in. Please try again.");
+      if (data.status !== 200) {
+        setMessage(data.message);
         dispatch(signInFailure(data));
+        setIsLoading(false);
         return;
       }
-
       dispatch(signInSuccess(data));
+      setMessage("");
+      setIsLoading(false);
       router.push("/");
-      console.log(data.message);
     } catch (error) {
-      console.log(error.message);
-      dispatch(signInFailure(error));
+      setMessage(error.message);
+      dispatch(signInFailure(error.message));
+      setIsLoading(false);
       return;
     }
   }
@@ -82,7 +85,7 @@ const Signin = () => {
                   type="submit"
                   className="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  Sign In
+                  {isLoading ? "Please Wait..." : "Sign In"}
                 </button>
               </div>
             </form>
@@ -92,6 +95,7 @@ const Signin = () => {
                 Sign Up
               </Link>
             </p>
+            {message ? <p>{message}</p> : ""}
           </div>
         </div>
       );

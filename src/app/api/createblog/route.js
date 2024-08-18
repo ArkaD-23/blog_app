@@ -42,7 +42,7 @@ export async function POST(req) {
     await db.insert(blogs).values(blogData);
     return NextResponse.json({
       status: 200,
-      message: "Blog successfully stored in the database",
+      message: "Blog successfully created !",
     });
   } catch (error) {
     return NextResponse.json({

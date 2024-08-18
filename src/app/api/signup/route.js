@@ -28,7 +28,7 @@ export async function POST(req) {
       role: data.role,
     });
   } catch (error) {
-    return NextResponse.json({ status: 400, message: error.message });
+    return NextResponse.json({ status: 400, message: error.errors[0].message });
   }
 
   const hashedPassword = bcryptjs.hashSync(validatedData.password, 10);

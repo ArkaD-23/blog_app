@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
@@ -13,11 +13,11 @@ import {
 } from "@/store/features/user/userSlice.js";
 
 const Profile = () => {
-
-  const {currentUser} = useAppSelector((state) => state.user);
-  const [formData , setFormData] = useState({});
-  const [Loading , setLoading] = useState(false);
+  const { currentUser } = useAppSelector((state) => state.user);
+  const [formData, setFormData] = useState({});
+  const [Loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -28,37 +28,47 @@ const Profile = () => {
     setLoading(true);
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`https://blog-app-six-blond.vercel.app/api/updateuser/${currentUser.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/updateuser/${currentUser.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
-      if (data.success === false) {
+      if (data.status !== 200) {
         dispatch(updateUserFailure(data));
         setLoading(false);
+        setError(data.message);
         return;
       }
       console.log(data.data);
       dispatch(updateUserSuccess(data.data));
+      setError("");
       setLoading(false);
     } catch (error) {
       dispatch(updateUserFailure(error));
       setLoading(false);
+      setError(error.message);
+      return;
     }
   };
 
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`https://blog-app-six-blond.vercel.app/api/deleteuser/${currentUser.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/deleteuser/${currentUser.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const data = res.json();
       console.log(data);
       if (data.success === false) {
@@ -75,10 +85,12 @@ const Profile = () => {
 
   const handleSignout = async () => {
     try {
-      await fetch(`https://blog-app-six-blond.vercel.app/api/signout/${currentUser.id}`);
+      await fetch("http://localhost:3000/api/signout");
       dispatch(signOut());
+      setError("");
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
+      console.log(error);
     }
   };
 
@@ -147,36 +159,37 @@ const Profile = () => {
           </div>
         </form>
         <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "1.25rem",
-              }}
-            >
-              <Link
-                href="/"
-                style={{
-                  color: "#DC2626",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-                onClick={handleDeleteAccount}
-              >
-                Delete Account
-              </Link>
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "1.25rem",
+          }}
+        >
+          <Link
+            href="/"
+            style={{
+              color: "#DC2626",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </Link>
 
-              <Link
-                href="/signin"
-                onClick={handleSignout}
-                style={{
-                  color: "#DC2626",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
-              >
-                Sign Out
-              </Link>
-            </div>
+          <Link
+            href="/signin"
+            onClick={handleSignout}
+            style={{
+              color: "#DC2626",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Sign Out
+          </Link>
+        </div>
+        {error ? <p>{error}</p> : ""}
       </div>
     </div>
   );

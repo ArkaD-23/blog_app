@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import { db } from "@/lib/db/db";
 import { eq } from "drizzle-orm";
-import { userSchema } from "@/lib/validators/userSchema"; 
-import { users } from "@/lib/db/schema"; 
+import { userSchema } from "@/lib/validators/userSchema";
+import { users } from "@/lib/db/schema";
 import jwt from "jsonwebtoken";
 
 export async function POST(req) {
@@ -23,10 +23,10 @@ export async function POST(req) {
   try {
     userSchema.pick({ email: true, password: true }).parse({
       email,
-      password
+      password,
     });
   } catch (error) {
-    return NextResponse.json({ status: 400, message: error.message });
+    return NextResponse.json({ status: 400, message: error.errors[0].message });
   }
 
   try {
@@ -34,7 +34,7 @@ export async function POST(req) {
       .select()
       .from(users)
       .where(eq(users.email, email))
-      .limit(1)
+      .limit(1);
 
     if (user.length === 0) {
       return NextResponse.json({
@@ -44,9 +44,8 @@ export async function POST(req) {
     }
 
     const userData = user[0];
-
+    
     const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET);
-    const stringToken = token.toString();
     const expiryDate = new Date(Date.now() + 36000000);
 
     const isPasswordValid = bcryptjs.compareSync(password, userData.password);
@@ -58,17 +57,25 @@ export async function POST(req) {
       });
     }
 
-    const response = NextResponse.json(userData);
-    response.headers.set(
-      'Set-Cookie',
-      `access_token=${stringToken}; HttpOnly; Path=/; Expires=${expiryDate.toUTCString()};`
-    );
+    const response = NextResponse.json({
+      id: userData.id, 
+      fname: userData.fname,
+      lname: userData.lname,
+      username: userData.username,
+      email: userData.email,
+      role: userData.role,
+      status: 200 });
+    response.cookies.set("access_token", token, {
+      httpOnly: true,
+      expires: expiryDate,
+    });
+
     return response;
   } catch (error) {
     console.error("Database query error:", error);
     return NextResponse.json({
       status: 500,
-      message: "Failed to sign in",
+      message: error.message,
     });
   }
 }

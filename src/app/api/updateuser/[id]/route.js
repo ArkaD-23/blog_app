@@ -1,41 +1,60 @@
-// app/api/user/[id]/route.js
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db/db";
-import { users } from "@/lib/db/schema";
+import { db } from "@/lib/db/db";  
+import { users } from "@/lib/db/schema"; 
 import { eq } from "drizzle-orm";
-import jwt from "jsonwebtoken";
+import { updateUserSchema } from "@/lib/validators/updateUserSchema";
+import bcryptjs from "bcryptjs";
 
-export async function DELETE(req, { params }) {
-  const cookies = req.cookies; 
-  const token = cookies.get('access_token')?.value;
-  const {id} = params;
+export async function PATCH(req, { params }) {
+  const { id } = params;
 
-  if (!token) {
-    return NextResponse.json({ status: 401, message: "Not authenticated!" });
+  let data;
+
+  try {
+    data = await req.json();
+  } catch (error) {
+    return NextResponse.json({
+      status: 400,
+      message: "Invalid JSON data",
+    });
+  }
+
+  let validatedData;
+  try {
+    validatedData = updateUserSchema.parse(data);
+  } catch (error) {
+    return NextResponse.json({
+      status: 400,
+      message: error.errors[0].message, 
+    });
+  }
+
+  if (validatedData.password) {
+    validatedData.password = bcryptjs.hashSync(validatedData.password, 10);
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+    const updatedUser = await db.update(users)
+      .set(validatedData)
+      .where(eq(users.id, id))
+      .returning();
 
-    if (userId !== id) {
-      return NextResponse.json({ status: 401, message: "You can delete only your own account!" });
+    if (updatedUser.length === 0) {
+      return NextResponse.json({
+        status: 404,
+        message: "User not found",
+      });
     }
-
-    const result = await db
-      .delete(users)
-      .where(eq(users.id, id));
-
-    if (result.rowCount === 0) {
-      return NextResponse.json({ status: 404, message: "User not found!" });
-    }
-
-    const response = NextResponse.json({ status: 200, message: "User has been deleted!" });
-    response.cookies.set('access_token', '', { httpOnly: true, path: '/', expires: new Date(0) }); 
-    return response;
-
+    const {password, ...dataWithoutPass} = updatedUser[0];
+    return NextResponse.json({
+      status: 200,
+      message: "User updated successfully",
+      data: dataWithoutPass,
+    });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    return NextResponse.json({ status: 500, message: error.message || "Something went wrong!" });
+    return NextResponse.json({
+      status: 500,
+      message: error.message,
+    });
   }
 }
