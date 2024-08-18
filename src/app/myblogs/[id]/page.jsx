@@ -14,7 +14,7 @@ const UserBlogsPage = () => {
     const fetchUserBlogs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:3000/api/myblogs/${currentUser.id}`);
+        const res = await fetch(`http://blog-app-omega-kohl-68.vercel.app/api/myblogs/${currentUser.id}`);
         const data = await res.json();
         if (data.status === 200) {
           setBlogs(data.data);

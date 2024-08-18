@@ -46,7 +46,7 @@ const Signup = () => {
     setError(""); 
 
     try {
-      const response = await fetch("http://localhost:3000/api/signup", {
+      const response = await fetch("http://blog-app-omega-kohl-68.vercel.app/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

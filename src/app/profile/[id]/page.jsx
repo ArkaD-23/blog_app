@@ -29,7 +29,7 @@ const Profile = () => {
     try {
       dispatch(updateUserStart());
       const res = await fetch(
-        `http://localhost:3000/api/updateuser/${currentUser.id}`,
+        `http://blog-app-omega-kohl-68.vercel.app/api/updateuser/${currentUser.id}`,
         {
           method: "PATCH",
           headers: {
@@ -61,7 +61,7 @@ const Profile = () => {
     try {
       dispatch(deleteUserStart());
       const res = await fetch(
-        `http://localhost:3000/api/deleteuser/${currentUser.id}`,
+        `http://blog-app-omega-kohl-68.vercel.app/api/deleteuser/${currentUser.id}`,
         {
           method: "DELETE",
           headers: {
@@ -85,7 +85,7 @@ const Profile = () => {
 
   const handleSignout = async () => {
     try {
-      await fetch("http://localhost:3000/api/signout");
+      await fetch("http://blog-app-omega-kohl-68.vercel.app/api/signout");
       dispatch(signOut());
       setError("");
     } catch (error) {
