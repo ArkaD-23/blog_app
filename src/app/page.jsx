@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -27,16 +28,30 @@ const Home = () => {
         setLoading(false);
       }
     };
-
     fetchBlogs();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const renderCards = () => {
-    if (blogs.length >= 4) {
+    if (!blogs.length) {
+      return <p>No blogs available.</p>;
+    }
+
+    if (!isMobile) {
       return (
         <>
           <div className="hidden md:flex justify-center gap-5 mb-10">
-            <CardLarge blog={blogs[0]} />
+            {blogs[0] && <CardLarge blog={blogs[0]} />}
             <div className="flex flex-col gap-5">
               {blogs.slice(1, 4).map((blog, index) => (
                 <CardMedium key={index} blog={blog} />
