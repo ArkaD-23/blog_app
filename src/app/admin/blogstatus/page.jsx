@@ -10,7 +10,7 @@ const Blogstatus = () => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await fetch("http://blog-app-omega-kohl-68.vercel.app/api/viewpendingblogs");
+        const res = await fetch("https://blog-app-omega-kohl-68.vercel.app/api/viewpendingblogs");
         const data = await res.json();
 
         console.log("Fetched data:", data);
@@ -33,7 +33,7 @@ const Blogstatus = () => {
 
   const updateBlogStatus = async (id, status, remarks) => {
     try {
-      const res = await fetch("http://blog-app-omega-kohl-68.vercel.app/api/blogstatus", {
+      const res = await fetch("https://blog-app-omega-kohl-68.vercel.app/api/blogstatus", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Blogstatus = () => {
         );
         try {
           setLoading(true);
-          const res = await fetch("http://blog-app-omega-kohl-68.vercel.app/api/viewpendingblogs");
+          const res = await fetch("https://blog-app-omega-kohl-68.vercel.app/api/viewpendingblogs");
           const data = await res.json();
 
           console.log("Fetched data:", data);
