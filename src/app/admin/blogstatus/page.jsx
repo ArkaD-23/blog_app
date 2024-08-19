@@ -9,7 +9,9 @@ const Blogstatus = () => {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/viewpendingblogs");
+      const res = await fetch("/api/viewpendingblogs", {
+        cache: "no-store",
+      });
       const data = await res.json();
 
       console.log("Fetched data:", data);
