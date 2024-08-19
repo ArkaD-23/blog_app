@@ -26,7 +26,7 @@ const Signin = () => {
     dispatch(signInStart());
     setIsLoading(true);
     try {
-      const response = await fetch("https://blog-app-omega-kohl-68.vercel.app/api/signin", {
+      const response = await fetch("https://blog-app-vv3d.vercel.app/api/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

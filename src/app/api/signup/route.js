@@ -51,7 +51,7 @@ export async function POST(req) {
   } catch (error) {
     return NextResponse.json({
       status: 500,
-      message: "Failed to store user in the database",
+      message: error.message,
     });
   }
 }
