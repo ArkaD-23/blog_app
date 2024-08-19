@@ -38,7 +38,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
 
-    if (isAdmin && formData.secretKey !== NEXT_PUBLIC_SECRET_KEY) {
+    if (isAdmin && formData.secretKey !== process.env.NEXT_PUBLIC_SECRET_KEY) {
       //console.log(formData.secretKey);
       setError("Wrong secret key. Please try again.");
       return;
