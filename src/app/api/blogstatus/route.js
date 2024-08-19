@@ -20,11 +20,13 @@ export async function POST(req) {
       return NextResponse.json({ status: 404, message: "Blog not found" });
     }
 
-    return NextResponse.json({
+    const res = NextResponse.json({
       status: 200,
       message: "Blog status updated successfully",
       data: updatedBlog[0],
     });
+    res.headers.set("Cache-Control", "no-store");
+    return res;
   } catch (error) {
     console.error('Error updating blog status:', error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });

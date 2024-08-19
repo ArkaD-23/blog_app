@@ -40,10 +40,12 @@ export async function POST(req) {
 
   try {
     await db.insert(blogs).values(blogData);
-    return NextResponse.json({
+    const res = NextResponse.json({
       status: 200,
       message: "Blog successfully created !",
     });
+    res.headers.set("Cache-Control", "no-store");
+    return res;
   } catch (error) {
     return NextResponse.json({
       status: 500,
