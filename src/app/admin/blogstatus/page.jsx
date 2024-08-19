@@ -45,14 +45,14 @@ const Blogstatus = () => {
 
       console.log("Updated data:", data);
 
-      if (data.status === 200) {
+      if (data) {
         setBlogs((prevBlogs) =>
           prevBlogs.map((blog) =>
             blog.id === id ? { ...blog, status } : blog
           )
         );
-      } else {
-        console.error("Failed to update blog status:", data);
+
+        fetchBlogs();
       }
     } catch (error) {
       console.error("Error updating status:", error);
