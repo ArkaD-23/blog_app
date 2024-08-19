@@ -10,20 +10,15 @@ export async function GET() {
       .from(blogs)
       .where(eq(blogs.status, "accepted"));
 
-    const res = NextResponse.json({
+    return NextResponse.json({
       status: 200,
       data: acceptedBlogs,
     });
 
-    res.headers.set("Cache-Control", "no-store");
-    return res;
-
   } catch (error) {
-    const res = NextResponse.json({
+    return NextResponse.json({
       status: 500,
       message: error,
     });
-    res.headers.set("Cache-Control", "no-store");
-    return res;
   }
 }

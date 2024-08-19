@@ -1,10 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Blogstatus = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -21,6 +23,7 @@ const Blogstatus = () => {
           console.error("Expected an array in data.data but got:", data);
           setBlogs([]);
           setLoading(false);
+          router.refresh();
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
@@ -61,6 +64,7 @@ const Blogstatus = () => {
             console.error("Expected an array in data.data but got:", data);
             setBlogs([]);
             setLoading(false);
+            router.refresh();
           }
         } catch (error) {
           console.error("Error fetching blogs:", error);

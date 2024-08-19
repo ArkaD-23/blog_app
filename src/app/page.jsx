@@ -1,11 +1,13 @@
 "use client";
 import { CardFullWidth, CardLarge, CardMedium } from "@/components/Cards";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -17,6 +19,7 @@ const Home = () => {
 
         if (Array.isArray(data.data)) {
           setBlogs(data.data);
+          router.refresh();
         } else {
           console.error("Expected an array in data.data but got:", data);
           setBlogs([]);
