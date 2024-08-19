@@ -1,36 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const Blogstatus = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  const fetchBlogs = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/viewpendingblogs");
+      const data = await res.json();
+
+      console.log("Fetched data:", data);
+      if (Array.isArray(data.data)) {
+        setBlogs(data.data);
+      } else {
+        console.error("Expected an array in data.data but got:", data);
+        setBlogs([]);
+      }
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+      setBlogs([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/viewpendingblogs");
-        const data = await res.json();
-
-        console.log("Fetched data:", data);
-        if (Array.isArray(data.data)) {
-          setBlogs(data.data);
-          setLoading(false);
-        } else {
-          console.error("Expected an array in data.data but got:", data);
-          setBlogs([]);
-          setLoading(false);
-          router.refresh();
-        }
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-        setLoading(false);
-      }
-    };
-
     fetchBlogs();
   }, []);
 
@@ -43,33 +40,19 @@ const Blogstatus = () => {
         },
         body: JSON.stringify({ id, status, remarks }),
       });
+
       const data = await res.json();
 
       console.log("Updated data:", data);
 
       if (data) {
-        setBlogs(
-          blogs.map((blog) => (blog.id === id ? { ...blog, status } : blog))
+        setBlogs((prevBlogs) =>
+          prevBlogs.map((blog) =>
+            blog.id === id ? { ...blog, status } : blog
+          )
         );
-        try {
-          setLoading(true);
-          const res = await fetch("/api/viewpendingblogs");
-          const data = await res.json();
 
-          console.log("Fetched data:", data);
-          if (Array.isArray(data.data)) {
-            setBlogs(data.data);
-            setLoading(false);
-          } else {
-            console.error("Expected an array in data.data but got:", data);
-            setBlogs([]);
-            setLoading(false);
-            router.refresh();
-          }
-        } catch (error) {
-          console.error("Error fetching blogs:", error);
-          setLoading(false);
-        }
+        fetchBlogs();
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -80,7 +63,9 @@ const Blogstatus = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Admin - Manage Blogs</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {blogs.length > 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : blogs.length > 0 ? (
           blogs.map((blog) => (
             <div key={blog.id} className="bg-white shadow-md p-4 rounded-md">
               <Link href={`/getblog/${blog.id}`}>
@@ -94,8 +79,8 @@ const Blogstatus = () => {
                 placeholder="Enter remarks for the author..."
                 value={blog.remarks || ""}
                 onChange={(e) =>
-                  setBlogs(
-                    blogs.map((b) =>
+                  setBlogs((prevBlogs) =>
+                    prevBlogs.map((b) =>
                       b.id === blog.id ? { ...b, remarks: e.target.value } : b
                     )
                   )
@@ -122,7 +107,7 @@ const Blogstatus = () => {
             </div>
           ))
         ) : (
-          <p>{loading ? "Loading..." : "No pending blogs available."}</p>
+          <p>No pending blogs available.</p>
         )}
       </div>
     </div>
