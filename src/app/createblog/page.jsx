@@ -20,7 +20,7 @@ const CreateBlog = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch("https://blog-app-vv3d.vercel.app/api/createblog", {
+      const response = await fetch("/api/createblog", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

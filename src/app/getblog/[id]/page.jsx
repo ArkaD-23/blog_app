@@ -10,7 +10,7 @@ const BlogPage = () => {
         if (id) {
             const fetchBlog = async () => {
                 try {
-                    const res = await fetch(`https://blog-app-vv3d.vercel.app/api/getblog/${id}`);
+                    const res = await fetch(`/api/getblog/${id}`);
                     const data = await res.json();
                     //console.log(data.data[0].id);
                     if (data && data.data) {

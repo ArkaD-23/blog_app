@@ -11,7 +11,7 @@ const Home = () => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await fetch("https://blog-app-vv3d.vercel.app/api/acceptedblogs");
+        const res = await fetch("/api/acceptedblogs");
         const data = await res.json();
         console.log(data);
 
