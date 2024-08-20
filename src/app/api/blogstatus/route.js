@@ -30,3 +30,5 @@ export async function POST(req) {
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
 }
+
+export const revalidate = 0;
