@@ -40,17 +40,14 @@ const Signin = () => {
       });
 
       const data = await response.json();
-      console.log(data.status);
 
       if (data.status !== 200) {
         toast.warning(data.message, {position: "top-center", autoClose: "1000"});
         dispatch(signInFailure(data));
         setIsLoading(false);
-        console.log(data.message);
         return;
       }
       dispatch(signInSuccess(data));
-      setMessage("");
       setIsLoading(false);
       router.push("/");
     } catch (error) {
