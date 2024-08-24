@@ -136,7 +136,7 @@ const Profile = () => {
               type="email"
               defaultValue={currentUser ? currentUser.email : ""}
               className="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              onCanPlay={handleChange}
+              onChange={handleChange}
             />
           </div>
           <div>
