@@ -13,7 +13,7 @@
 /.next/
 /out/
 
-
+.dockerignore
 
 # misc
 .DS_Store
